@@ -77,5 +77,5 @@ def make_api_request(api_endpoint: str, request_info: dict) -> dict:
     except (requests.RequestException, requests.ConnectionError,
             requests.HTTPError, requests.URLRequired,
             requests.exceptions.InvalidJSONError) as err:
-        print(type(err), err)
+        print(err)
     return {}
