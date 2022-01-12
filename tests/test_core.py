@@ -20,7 +20,7 @@ class CoreTestSuite(unittest.TestCase):
         mock_api_request.return_value = test_data.current_weather
         weather = core.current_weather('London')
         self.assertIsInstance(weather, dict)
-        self.assertTrue(len(weather) != 0)
+        self.assertTrue(len(weather))
 
         expected_result = {'location': test_data.current_weather['location'],
                            'condition': test_data.current_weather['current']['condition']['text'],
@@ -55,11 +55,35 @@ class CoreTestSuite(unittest.TestCase):
         weather = core.forecast_weather('London', 10)
         self.assertEqual(weather, {})
 
-    @patch('requests.get')
-    def test_weather_alerts(self, mock_requests):
+    @patch('pyweather.core.make_api_request')
+    def test_weather_alerts(self, mock_api_request):
         """
         Test getting weather alerts.
         """
+        mock_api_request.return_value = test_data.current_alerts
+        weather_alerts = core.current_weather_alerts('Montreal')
+        self.assertIsInstance(weather_alerts, dict)
+        self.assertTrue(len(weather_alerts))
+        self.assertIn("alert", weather_alerts.keys())
+
+        self.assertIsInstance(weather_alerts["alert"], list)
+        alerts_list = weather_alerts["alert"]
+        self.assertTrue(len(alerts_list))
+        key_properties = {"headline": str,
+                          "msgtype" : str,
+                          "severity": str,
+                          "areas": str,
+                          "category": str,
+                          "certainty": str,
+                          "desc": str}
+        for item in alerts_list:
+            self.assertIsInstance(item, dict)
+            item_keys = item.keys()
+            for key, prop in key_properties.items():
+                self.assertIn(key, item_keys)
+                self.assertIsInstance(item[key], prop)
+
+
 
     @patch('requests.get')
     def test_weather_alerts_error(self, mock_requests):
