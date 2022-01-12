@@ -7,7 +7,7 @@ from unittest.mock import patch
 
 import requests
 
-from pyweather import core
+from .context import pyweather
 from .fixtures import test_data
 
 class CoreTestSuite(unittest.TestCase):
@@ -18,7 +18,7 @@ class CoreTestSuite(unittest.TestCase):
         Test for current weather.
         """
         mock_api_request.return_value = test_data.current_weather
-        weather = core.current_weather('London')
+        weather = pyweather.core.current_weather('London')
         self.assertIsInstance(weather, dict)
         self.assertTrue(len(weather))
 
@@ -37,14 +37,29 @@ class CoreTestSuite(unittest.TestCase):
         Test error case for current weather.
         """
         mock_requests.side_effect = requests.RequestException
-        weather = core.current_weather('London')
+        weather = pyweather.core.current_weather('London')
         self.assertEqual(weather, {})
 
-    @patch('requests.get')
-    def test_forecast(self, mock_requests):
+    @patch('pyweather.core.make_api_request')
+    def test_forecast(self, mock_api_request):
         """
         Test weather forecast.
         """
+        mock_api_request.return_value = test_data.forecast
+        weather = pyweather.core.forecast_weather('London', 2)
+        self.assertIsInstance(weather, list)
+        self.assertTrue(len(weather))
+
+        expected_element_keys = ['date', 'day']
+        for element in weather:
+            self.assertIsInstance(element, dict)
+            for key in expected_element_keys:
+                self.assertIn(key, element.keys())
+
+            self.assertIsInstance(element['date'], str)
+            self.assertIsInstance(element['day'], dict)
+            self.assertTrue(len(element['day']))
+
 
     @patch('requests.get')
     def test_forecast_error(self, mock_requests):
@@ -52,8 +67,8 @@ class CoreTestSuite(unittest.TestCase):
         Test error case for forecast.
         """
         mock_requests.side_effect = requests.RequestException
-        weather = core.forecast_weather('London', 10)
-        self.assertEqual(weather, {})
+        weather = pyweather.core.forecast_weather('London', 10)
+        self.assertEqual(weather, [])
 
     @patch('pyweather.core.make_api_request')
     def test_weather_alerts(self, mock_api_request):
@@ -61,7 +76,7 @@ class CoreTestSuite(unittest.TestCase):
         Test getting weather alerts.
         """
         mock_api_request.return_value = test_data.current_alerts
-        weather_alerts = core.current_weather_alerts('Montreal')
+        weather_alerts = pyweather.core.current_weather_alerts('Montreal')
         self.assertIsInstance(weather_alerts, dict)
         self.assertTrue(len(weather_alerts))
         self.assertIn("alert", weather_alerts.keys())
@@ -91,5 +106,5 @@ class CoreTestSuite(unittest.TestCase):
         Test error case for forecast.
         """
         mock_requests.side_effect = requests.RequestException
-        weather = core.current_weather_alerts('London')
+        weather = pyweather.core.current_weather_alerts('London')
         self.assertEqual(weather, {})

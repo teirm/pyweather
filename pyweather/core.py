@@ -40,7 +40,7 @@ def forecast_weather(city: str, days: int) -> list:
     weather = make_api_request(endpoint, request_info)
     if weather:
         return [{'date': d['date'], 'day': d['day']} for d in weather['forecast']['forecastday']]
-    return {}
+    return []
 
 def current_weather_alerts(city: str) -> dict:
     """
