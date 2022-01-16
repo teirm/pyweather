@@ -12,18 +12,9 @@ def show_current_weather(weather : list):
     if not weather:
         print('No weather information.')
         return
+    print_weather(weather)
 
-    column_widths = get_column_widths([weather])
-    header = []
-    rows = []
-    for key, value in weather.items():
-        header.append(f'{key : <{column_widths[key]+3}}')
-        rows.append(f'{value:  <{column_widths[key]+3}}')
-    print(header, sep='|')
-    print(rows, sep='|')
-
-
-def show_weather_alerts(alerts: dict):
+def show_weather_alerts(alerts: list):
     """
     Display current weather alerts on stdout.
 
@@ -32,6 +23,30 @@ def show_weather_alerts(alerts: dict):
     """
     if not alerts:
         print('No weather alerts.')
+    print_weather(alerts)
+
+def show_weather_forecast(forecast: list):
+    """
+    Display the weather forecast on stdout.
+
+    Args:
+        alerts: list of forecast information.
+    """
+    if not forecast:
+        print('No forecast information.')
+    print_weather(forecast)
+
+def print_weather(weather: list):
+    """
+    Print the weather as a table to stdout.
+
+    Args:
+        weather: list of lists containing weather information
+    """
+    column_widths = get_column_widths(weather)
+    for row in weather:
+        print([f'{element : <{column_widths[idx]+3}}'
+              for element, idx in enumerate(row)], sep='|')
 
 def get_column_widths(table_data : list) -> list:
     """
