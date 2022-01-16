@@ -117,9 +117,7 @@ forecast = {
                 },
                 "astro": {
                     "sunrise": "08:02 AM",
-                    "sunset": "04:15 PM",
-                    "moonrise": "12:03 PM",
-                    "moonset": "01:52 AM",
+                    "sunset": "04:15 PM", "moonrise": "12:03 PM", "moonset": "01:52 AM",
                     "moon_phase": "First Quarter",
                     "moon_illumination": "57"
                 },

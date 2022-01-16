@@ -4,7 +4,7 @@ PyWeather core functionality for request handling.
 
 import requests
 
-def current_weather(city: str) -> dict:
+def current_weather(city: str) -> list:
     """
     Get current weather for given city.
 
@@ -19,11 +19,15 @@ def current_weather(city: str) -> dict:
     request_info = {'q': city, 'aqi': 'no'}
     weather =  make_api_request(endpoint, request_info)
     if weather:
-        return {'location': weather['location'],
-                'condition': weather['current']['condition']['text'],
-                'updated': weather['current']['last_updated'],
-                'temp': weather['current']['temp_c']}
-    return {}
+        rows = [
+                ['location', 'condition', 'last_updated', 'temp_c'],
+                [weather['location'],
+                 weather['current']['condition']['text'],
+                 weather['current']['last_updated'],
+                 weather['current']['temp_c']]
+        ]
+        return rows
+    return []
 
 def forecast_weather(city: str, days: int) -> list:
     """
@@ -39,10 +43,17 @@ def forecast_weather(city: str, days: int) -> list:
     request_info = {'q': city, 'days': days, 'alerts': 'no'}
     weather = make_api_request(endpoint, request_info)
     if weather:
-        return [{'date': d['date'], 'day': d['day']} for d in weather['forecast']['forecastday']]
+        rows = [['date', 'maxtemp (c)', 'mintemp (c)', 'chance of rain', 'condition']]
+        for day in weather['forecast']['forecastday']:
+            rows.append([day['date'],
+                         day['day']['maxtemp_c'],
+                         day['day']['mintemp_c'],
+                         day['day']['daily_chance_of_rain'],
+                         day['day']['condition']['text']])
+        return rows
     return []
 
-def current_weather_alerts(city: str) -> dict:
+def current_weather_alerts(city: str) -> list:
     """
     Get current weather alerts for given city.
 
@@ -50,14 +61,18 @@ def current_weather_alerts(city: str) -> dict:
         city:   city for which to get alert information
 
     Return:
-        dictionary of weather information
+        list of weather alerts
     """
     endpoint = 'forecast.json'
     request_info = {'q': city, 'days': 1, 'alerts': 'yes'}
     weather = make_api_request(endpoint, request_info)
     if weather:
-        return weather['alerts']
-    return {}
+        header = ['headline', 'areas', 'event', 'effective', 'expires']
+        rows = [header]
+        for alert in weather['alerts']['alert']:
+            rows.append([alert[key] for key in header])
+        return rows
+    return []
 
 def make_api_request(api_endpoint: str, request_info: dict) -> dict:
     """
