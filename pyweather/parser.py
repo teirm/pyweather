@@ -15,7 +15,7 @@ def parse_args(args : list) -> argparse.Namespace:
         Namespace with arguments parsed
     """
     parser = argparse.ArgumentParser(prog='PyWeather')
-    subparsers = parser.add_subparsers()
+    subparsers = parser.add_subparsers(dest='subparser_name')
 
     weather_parser = subparsers.add_parser('weather',
                                            help='Get the current weather for a city')
