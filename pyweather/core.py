@@ -88,7 +88,10 @@ def make_api_request(api_endpoint: str, request_info: dict) -> dict:
     api_url = "http://api.weatherapi.com/v1/"
     try:
         request = requests.get(api_url + api_endpoint, request_info)
-        return request.json()
+        request_json = request.json()
+        if 'error' in request_json.keys():
+            print(f'Error: {request_json["error"]["message"]}')
+            return {}
     except (requests.RequestException, requests.ConnectionError,
             requests.HTTPError, requests.URLRequired,
             requests.exceptions.InvalidJSONError) as err:

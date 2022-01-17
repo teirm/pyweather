@@ -2,6 +2,6 @@
 Pyweather main entry point.
 """
 
-from pyweather import pyweather
+from pyweather import main
 
-pyweather.main()
+main.main()

@@ -42,6 +42,17 @@ class CoreTestSuite(unittest.TestCase):
         weather = pyweather.core.current_weather('London')
         self.assertEqual(weather, [])
 
+    @patch('requests.Response.json')
+    def test_current_weather_api_error(self, mock_requests):
+        """
+        Test web api error for current weather.
+        """
+        mock_requests.return_value = {'error': {'code': 1002,
+                                                'message': 'API key is invalid or not provided.'}
+                                      }
+        weather = pyweather.core.current_weather('London')
+        self.assertEqual(weather, [])
+
     @patch('pyweather.core.make_api_request')
     def test_forecast(self, mock_api_request):
         """
@@ -75,6 +86,17 @@ class CoreTestSuite(unittest.TestCase):
         weather = pyweather.core.forecast_weather('London', 10)
         self.assertEqual(weather, [])
 
+    @patch('requests.Response.json')
+    def test_forecast_weather_api_error(self, mock_requests):
+        """
+        Test web api error for forecast weather.
+        """
+        mock_requests.return_value = {'error': {'code': 1002,
+                                                'message': 'API key is invalid or not provided.'}
+                                      }
+        weather = pyweather.core.forecast_weather('London', 10)
+        self.assertEqual(weather, [])
+
     @patch('pyweather.core.make_api_request')
     def test_weather_alerts(self, mock_api_request):
         """
@@ -84,6 +106,7 @@ class CoreTestSuite(unittest.TestCase):
         weather_alerts = pyweather.core.current_weather_alerts('Montreal')
         self.assertIsInstance(weather_alerts, list)
         self.assertTrue(len(weather_alerts))
+
 
         header = ['headline', 'areas', 'event', 'effective', 'expires']
         self.assertIsInstance(weather_alerts[0], list)
@@ -97,8 +120,19 @@ class CoreTestSuite(unittest.TestCase):
     @patch('requests.get')
     def test_weather_alerts_error(self, mock_requests):
         """
-        Test error case for forecast.
+        Test error case for alerts.
         """
         mock_requests.side_effect = requests.RequestException
+        weather = pyweather.core.current_weather_alerts('London')
+        self.assertEqual(weather, [])
+
+    @patch('requests.Response.json')
+    def test_weather_alerts_api_error(self, mock_requests):
+        """
+        Test web api error for alerts.
+        """
+        mock_requests.return_value = {'error': {'code': 1002,
+                                                'message': 'API key is invalid or not provided.'}
+                                      }
         weather = pyweather.core.current_weather_alerts('London')
         self.assertEqual(weather, [])

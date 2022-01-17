@@ -4,7 +4,7 @@ Command line argument parsing.
 
 import argparse
 
-def parse_args(args : list) -> argparse.Namespace:
+def get_parser() -> argparse:
     """
     Parse command line arguments for pyweather.
 
@@ -31,4 +31,4 @@ def parse_args(args : list) -> argparse.Namespace:
                                           help='Get weather alerts for a city')
     alerts_parser.add_argument('--city', required=True, type=str, help='Name of city')
 
-    return parser.parse_args(args)
+    return parser
