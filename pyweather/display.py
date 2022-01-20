@@ -9,15 +9,19 @@ def print_weather(weather: list):
     Args:
         weather: list of lists containing weather information
     """
-
-    if not weather:
+    if len(weather) == 1:
         print('No weather information to display.')
         return
 
     column_widths = get_column_widths(weather)
-    for row in weather:
-        print([f'{element : <{column_widths[idx]+3}}'
-              for element, idx in enumerate(row)], sep='|')
+
+    print(*[f'{element : <{column_widths[idx]+3}}'
+          for idx, element in enumerate(weather[0])], sep='|')
+    print('-' * (sum(column_widths) + 3*len(column_widths)))
+
+    for row in weather[1:]:
+        print(*[f'{element : <{column_widths[idx]+3}}'
+              for idx, element in enumerate(row)], sep='|')
 
 def get_column_widths(table_data : list) -> list:
     """
@@ -32,5 +36,5 @@ def get_column_widths(table_data : list) -> list:
     widths = [0] * len(table_data[0])
     for row in table_data:
         for idx, element in enumerate(row):
-            widths[idx] = max(widths[idx], len(element))
+            widths[idx] = max(widths[idx], len(str(element)))
     return widths

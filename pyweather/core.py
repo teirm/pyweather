@@ -21,7 +21,7 @@ def current_weather(city: str, api_key: str) -> list:
     if weather:
         rows = [
                 ['location', 'condition', 'last_updated', 'temp_c'],
-                [weather['location'],
+                [weather['location']['name'],
                  weather['current']['condition']['text'],
                  weather['current']['last_updated'],
                  weather['current']['temp_c']]
@@ -92,6 +92,7 @@ def make_api_request(api_endpoint: str, request_info: dict) -> dict:
         if 'error' in request_json.keys():
             print(f'Error: {request_json["error"]["message"]}')
             return {}
+        return request_json
     except (requests.RequestException, requests.ConnectionError,
             requests.HTTPError, requests.URLRequired,
             requests.exceptions.InvalidJSONError) as err:

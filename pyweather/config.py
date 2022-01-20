@@ -21,7 +21,7 @@ def get_config():
         config_path = os.path.join(location, 'pyweather.json')
         if os.path.exists(config_path):
             try:
-                with open(config_path, encoding=ascii) as json_fp:
+                with open(config_path, encoding='utf-8') as json_fp:
                     return json.load(json_fp)
             except IOError as exp:
                 print(f'Unable to open {config_path}: {repr(exp)}.')
