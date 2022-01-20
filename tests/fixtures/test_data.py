@@ -3,6 +3,8 @@ Data collected to test API.
 """
 #pylint: disable=line-too-long
 
+API_KEY = 'doggydog'
+
 current_weather = {
     "location": {
         "name": "London",

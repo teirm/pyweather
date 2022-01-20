@@ -4,7 +4,7 @@ PyWeather core functionality for request handling.
 
 import requests
 
-def current_weather(city: str) -> list:
+def current_weather(city: str, api_key: str) -> list:
     """
     Get current weather for given city.
 
@@ -16,7 +16,7 @@ def current_weather(city: str) -> list:
         empty dict on error
     """
     endpoint = 'current.json'
-    request_info = {'q': city, 'aqi': 'no'}
+    request_info = {'q': city, 'aqi': 'no', 'key': api_key}
     weather =  make_api_request(endpoint, request_info)
     if weather:
         rows = [
@@ -29,7 +29,7 @@ def current_weather(city: str) -> list:
         return rows
     return []
 
-def forecast_weather(city: str, days: int) -> list:
+def forecast_weather(city: str, days: int, api_key: str) -> list:
     """
     Get the n-days forecast for the given city.
 
@@ -40,7 +40,7 @@ def forecast_weather(city: str, days: int) -> list:
         dictionary of forecast information
     """
     endpoint = 'forecast.json'
-    request_info = {'q': city, 'days': days, 'alerts': 'no'}
+    request_info = {'q': city, 'days': days, 'alerts': 'no', 'key': api_key}
     weather = make_api_request(endpoint, request_info)
     if weather:
         rows = [['date', 'maxtemp (c)', 'mintemp (c)', 'chance of rain', 'condition']]
@@ -53,7 +53,7 @@ def forecast_weather(city: str, days: int) -> list:
         return rows
     return []
 
-def current_weather_alerts(city: str) -> list:
+def current_weather_alerts(city: str, api_key: str) -> list:
     """
     Get current weather alerts for given city.
 
@@ -64,7 +64,7 @@ def current_weather_alerts(city: str) -> list:
         list of weather alerts
     """
     endpoint = 'forecast.json'
-    request_info = {'q': city, 'days': 1, 'alerts': 'yes'}
+    request_info = {'q': city, 'days': 1, 'alerts': 'yes', 'key': api_key}
     weather = make_api_request(endpoint, request_info)
     if weather:
         header = ['headline', 'areas', 'event', 'effective', 'expires']

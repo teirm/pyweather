@@ -19,7 +19,7 @@ class CoreTestSuite(unittest.TestCase):
         Test for current weather.
         """
         mock_api_request.return_value = test_data.current_weather
-        weather = pyweather.core.current_weather('London')
+        weather = pyweather.core.current_weather('London', test_data.API_KEY)
         self.assertIsInstance(weather, list)
         self.assertTrue(len(weather))
         expected_result = [
@@ -39,7 +39,7 @@ class CoreTestSuite(unittest.TestCase):
         Test error case for current weather.
         """
         mock_requests.side_effect = requests.RequestException
-        weather = pyweather.core.current_weather('London')
+        weather = pyweather.core.current_weather('London', test_data.API_KEY)
         self.assertEqual(weather, [])
 
     @patch('requests.Response.json')
@@ -50,7 +50,7 @@ class CoreTestSuite(unittest.TestCase):
         mock_requests.return_value = {'error': {'code': 1002,
                                                 'message': 'API key is invalid or not provided.'}
                                       }
-        weather = pyweather.core.current_weather('London')
+        weather = pyweather.core.current_weather('London', test_data.API_KEY)
         self.assertEqual(weather, [])
 
     @patch('pyweather.core.make_api_request')
@@ -59,7 +59,7 @@ class CoreTestSuite(unittest.TestCase):
         Test weather forecast.
         """
         mock_api_request.return_value = test_data.forecast
-        weather = pyweather.core.forecast_weather('London', 2)
+        weather = pyweather.core.forecast_weather('London', 2, test_data.API_KEY)
         self.assertIsInstance(weather, list)
         self.assertTrue(len(weather))
 
@@ -83,7 +83,7 @@ class CoreTestSuite(unittest.TestCase):
         Test error case for forecast.
         """
         mock_requests.side_effect = requests.RequestException
-        weather = pyweather.core.forecast_weather('London', 10)
+        weather = pyweather.core.forecast_weather('London', 10, test_data.API_KEY)
         self.assertEqual(weather, [])
 
     @patch('requests.Response.json')
@@ -94,7 +94,7 @@ class CoreTestSuite(unittest.TestCase):
         mock_requests.return_value = {'error': {'code': 1002,
                                                 'message': 'API key is invalid or not provided.'}
                                       }
-        weather = pyweather.core.forecast_weather('London', 10)
+        weather = pyweather.core.forecast_weather('London', 10, test_data.API_KEY)
         self.assertEqual(weather, [])
 
     @patch('pyweather.core.make_api_request')
@@ -103,7 +103,7 @@ class CoreTestSuite(unittest.TestCase):
         Test getting weather alerts.
         """
         mock_api_request.return_value = test_data.current_alerts
-        weather_alerts = pyweather.core.current_weather_alerts('Montreal')
+        weather_alerts = pyweather.core.current_weather_alerts('Montreal', test_data.API_KEY)
         self.assertIsInstance(weather_alerts, list)
         self.assertTrue(len(weather_alerts))
 
@@ -123,7 +123,7 @@ class CoreTestSuite(unittest.TestCase):
         Test error case for alerts.
         """
         mock_requests.side_effect = requests.RequestException
-        weather = pyweather.core.current_weather_alerts('London')
+        weather = pyweather.core.current_weather_alerts('London', test_data.API_KEY)
         self.assertEqual(weather, [])
 
     @patch('requests.Response.json')
@@ -134,5 +134,5 @@ class CoreTestSuite(unittest.TestCase):
         mock_requests.return_value = {'error': {'code': 1002,
                                                 'message': 'API key is invalid or not provided.'}
                                       }
-        weather = pyweather.core.current_weather_alerts('London')
+        weather = pyweather.core.current_weather_alerts('London', test_data.API_KEY)
         self.assertEqual(weather, [])
