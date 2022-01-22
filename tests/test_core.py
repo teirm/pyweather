@@ -12,7 +12,7 @@ from .context import pyweather
 from .fixtures import test_data
 
 class CoreTestSuite(unittest.TestCase):
-    """Core Test Suit."""
+    """Core Test Suite."""
     @patch('pyweather.core.make_api_request')
     def test_current_weather(self, mock_api_request):
         """
@@ -24,7 +24,7 @@ class CoreTestSuite(unittest.TestCase):
         self.assertTrue(len(weather))
         expected_result = [
                            ['location', 'condition', 'last_updated', 'temp_c'],
-                           [test_data.current_weather['location'],
+                           [test_data.current_weather['location']['name'],
                            test_data.current_weather['current']['condition']['text'],
                            test_data.current_weather['current']['last_updated'],
                            test_data.current_weather['current']['temp_c']]

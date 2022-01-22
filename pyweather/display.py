@@ -25,7 +25,7 @@ def print_weather(weather: list):
 
 def get_column_widths(table_data : list) -> list:
     """
-    Get the maximum length for each k,y pair.
+    Get the maximum length for each column.
 
     Args:
         table_data: data for table
@@ -35,6 +35,8 @@ def get_column_widths(table_data : list) -> list:
     """
     widths = [0] * len(table_data[0])
     for row in table_data:
+        if len(row) != len(widths):
+            raise ValueError
         for idx, element in enumerate(row):
             widths[idx] = max(widths[idx], len(str(element)))
     return widths
